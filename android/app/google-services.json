@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "517458835790",
+    "project_id": "ahmedfoued-18f7d",
+    "storage_bucket": "ahmedfoued-18f7d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:517458835790:android:a311bd19475415d634461f",
+        "android_client_info": {
+          "package_name": "com.example.ahmedfoued"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkE99mXL7arrBQ4ur8O_wE4qnm1dmqJQE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
