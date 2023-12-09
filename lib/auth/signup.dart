@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:ahmedfoued/service/auth_service.dart';
 
-class SignupPage extends StatelessWidget {
+class SignupPage extends StatefulWidget {
+  SignupPage({Key? key}) : super(key: key);
+
+  @override
+  _SignupPageState createState() => _SignupPageState();
+}
+
+class _SignupPageState extends State<SignupPage> {
   final AuthService authService = AuthService();
   String email = '';
   String password = '';
   String confirmPassword = '';
-
-  SignupPage({super.key});
+  bool isPasswordVisible = false;
 
   Future<void> _signUp(BuildContext context) async {
     // Check if email and password are not empty
@@ -26,8 +32,10 @@ class SignupPage extends StatelessWidget {
     final result = await authService.signUpWithEmailAndPassword(email, password);
 
     if (result == null) {
-      // Successful registration, navigate to the login page
-      // ignore: use_build_context_synchronously
+      // Successful registration, show success alert
+      _showSuccessAlert(context);
+      // Delay for a short time and then navigate to the login page
+      await Future.delayed(const Duration(seconds: 2));
       Navigator.pushReplacementNamed(context, '/login');
     } else {
       // Handle registration failure (show an error message)
@@ -42,6 +50,26 @@ class SignupPage extends StatelessWidget {
         return AlertDialog(
           title: const Text('Error'),
           content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showSuccessAlert(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Success'),
+          content: const Text('Registration successful!'),
           actions: [
             TextButton(
               onPressed: () {
@@ -84,7 +112,7 @@ class SignupPage extends StatelessWidget {
                     "Sign up",
                     style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 20,),
+                  const SizedBox(height: 20),
                   Text(
                     "Create an account, It's free",
                     style: TextStyle(fontSize: 15, color: Colors.grey[700]),
@@ -94,8 +122,8 @@ class SignupPage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   makeInput(label: "Email", onChanged: (value) => email = value.trim()),
-                  makeInput(label: "Password", obscureText: true, onChanged: (value) => password = value.trim()),
-                  makeInput(label: "Confirm Password", obscureText: true, onChanged: (value) => confirmPassword = value.trim()),
+                  makeInput(label: "Password", obscureText: !isPasswordVisible, onChanged: (value) => password = value),
+                  makeInput(label: "Confirm Password", obscureText: true, onChanged: (value) => confirmPassword = value),
                 ],
               ),
               Container(
@@ -146,45 +174,42 @@ class SignupPage extends StatelessWidget {
     );
   }
 
-Widget makeInput({label, obscureText = false, void Function(String)? onChanged}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: <Widget>[
-      Text(
-        label,
-        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
-      ),
-      const SizedBox(height: 5,),
-      TextField(
-        onChanged: (value) {
-          if (obscureText) {
-            onChanged?.call(value); // Call onChanged with the password value
-          } else {
-            onChanged?.call(""); // Clear the text field
-          }
-        },
-        obscureText: obscureText,
-        decoration: InputDecoration(
-          contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey.shade400),
-          ),
-          border: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey.shade400),
-          ),
-          suffixIcon: obscureText
-              ? IconButton(
-                  onPressed: () {
-                    onChanged?.call(""); // Clear the text field
-                  },
-                  icon: Icon(obscureText ? Icons.visibility : Icons.visibility_off),
-                )
-              : null,
+  Widget makeInput({String? label, bool obscureText = false, void Function(String)? onChanged}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          label ?? "",
+          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
         ),
-      ),
-      const SizedBox(height: 30,),
-    ],
-  );
-}
-
+        const SizedBox(height: 5),
+        TextField(
+          onChanged: (value) {
+            onChanged?.call(value); // Call onChanged with the value
+          },
+          obscureText: obscureText,
+          decoration: InputDecoration(
+            contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+            enabledBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.grey),
+            ),
+            border: OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.grey),
+            ),
+            suffixIcon: label == "Password"
+                ? IconButton(
+                    onPressed: () {
+                      setState(() {
+                        isPasswordVisible = !isPasswordVisible;
+                      });
+                    },
+                    icon: Icon(isPasswordVisible ? Icons.visibility : Icons.visibility_off),
+                  )
+                : null,
+          ),
+        ),
+        const SizedBox(height: 30),
+      ],
+    );
+  }
 }

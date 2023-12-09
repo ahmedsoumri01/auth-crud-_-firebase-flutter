@@ -1,14 +1,20 @@
 import 'dart:convert';
-// ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
 
 class FakeApiService {
-  Future<List<Map<String, dynamic>>> getFakeData() async {
+ 
+   Future<List<Map<String, dynamic>>> getFakeData({int? userId}) async {
     try {
-      final response = await http.get(Uri.parse('https://jsonplaceholder.typicode.com/posts'));
+      final response = await http.get(
+        Uri.parse('https://jsonplaceholder.typicode.com/posts'),
+      );
 
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
+        if (userId != null) {
+          // Filter data by userId if provided
+          data = data.where((post) => post['userId'] == userId).toList();
+        }
         return data.cast<Map<String, dynamic>>();
       } else {
         throw Exception('Failed to load fake data. Status code: ${response.statusCode}');
@@ -17,12 +23,15 @@ class FakeApiService {
       throw Exception('Failed to load fake data: $error');
     }
   }
-
+ 
   Future<void> deleteFakeData(int postId) async {
     try {
-      final response = await http.delete(Uri.parse('https://jsonplaceholder.typicode.com/posts/$postId'));
+      final response = await http.delete(
+        Uri.parse('https://jsonplaceholder.typicode.com/posts/$postId'),
+      );
 
       if (response.statusCode == 200) {
+        // Successful deletion
         return;
       } else {
         throw Exception('Failed to delete fake data. Status code: ${response.statusCode}');
@@ -59,12 +68,29 @@ class FakeApiService {
       );
 
       if (response.statusCode == 201) {
+        // Successful post creation
         return;
       } else {
         throw Exception('Failed to add a new post. Status code: ${response.statusCode}');
       }
     } catch (error) {
       throw Exception('Failed to add a new post: $error');
+    }
+  }
+    Future<List<Map<String, dynamic>>> getPostsByUserId(int userId) async {
+    try {
+      final response = await http.get(
+        Uri.parse('https://jsonplaceholder.typicode.com/posts?userId=$userId'),
+      );
+
+      if (response.statusCode == 200) {
+        List<dynamic> data = json.decode(response.body);
+        return data.cast<Map<String, dynamic>>();
+      } else {
+        throw Exception('Failed to load posts by user ID. Status code: ${response.statusCode}');
+      }
+    } catch (error) {
+      throw Exception('Failed to load posts by user ID: $error');
     }
   }
 }
