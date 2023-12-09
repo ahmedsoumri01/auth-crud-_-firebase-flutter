@@ -7,7 +7,7 @@ class SignupPage extends StatelessWidget {
   String password = '';
   String confirmPassword = '';
 
-  SignupPage({super.key});
+  SignupPage({Key? key}) : super(key: key);
 
   Future<void> _signUp(BuildContext context) async {
     // Check if email and password are not empty
@@ -123,13 +123,18 @@ class SignupPage extends StatelessWidget {
                   ),
                 ),
               ),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text("Already have an account?"),
-                  Text(
-                    " Login",
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushReplacementNamed(context, '/login');
+                    },
+                    child: Text(
+                      " Login",
+                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18, color: Colors.blue),
+                    ),
                   ),
                 ],
               ),
@@ -140,30 +145,45 @@ class SignupPage extends StatelessWidget {
     );
   }
 
-  Widget makeInput({label, obscureText = false, void Function(String)? onChanged}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          label,
-          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
-        ),
-        const SizedBox(height: 5,),
-        TextField(
-          onChanged: onChanged,
-          obscureText: obscureText,
-          decoration: InputDecoration(
-            contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey.shade400),
-            ),
-            border: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey.shade400),
-            ),
+Widget makeInput({label, obscureText = false, void Function(String)? onChanged}) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: <Widget>[
+      Text(
+        label,
+        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
+      ),
+      const SizedBox(height: 5,),
+      TextField(
+        onChanged: (value) {
+          if (obscureText) {
+            onChanged?.call(value); // Call onChanged with the password value
+          } else {
+            onChanged?.call(""); // Clear the text field
+          }
+        },
+        obscureText: obscureText,
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey.shade400),
           ),
+          border: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey.shade400),
+          ),
+          suffixIcon: obscureText
+              ? IconButton(
+                  onPressed: () {
+                    onChanged?.call(""); // Clear the text field
+                  },
+                  icon: Icon(obscureText ? Icons.visibility : Icons.visibility_off),
+                )
+              : null,
         ),
-        const SizedBox(height: 30,),
-      ],
-    );
-  }
+      ),
+      const SizedBox(height: 30,),
+    ],
+  );
+}
+
 }
