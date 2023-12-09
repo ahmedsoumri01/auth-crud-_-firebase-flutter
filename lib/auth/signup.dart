@@ -7,7 +7,7 @@ class SignupPage extends StatelessWidget {
   String password = '';
   String confirmPassword = '';
 
-  SignupPage({Key? key}) : super(key: key);
+  SignupPage({super.key});
 
   Future<void> _signUp(BuildContext context) async {
     // Check if email and password are not empty
@@ -27,6 +27,7 @@ class SignupPage extends StatelessWidget {
 
     if (result == null) {
       // Successful registration, navigate to the login page
+      // ignore: use_build_context_synchronously
       Navigator.pushReplacementNamed(context, '/login');
     } else {
       // Handle registration failure (show an error message)
@@ -126,12 +127,12 @@ class SignupPage extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text("Already have an account?"),
+                  const Text("Already have an account?"),
                   GestureDetector(
                     onTap: () {
                       Navigator.pushReplacementNamed(context, '/login');
                     },
-                    child: Text(
+                    child: const Text(
                       " Login",
                       style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18, color: Colors.blue),
                     ),

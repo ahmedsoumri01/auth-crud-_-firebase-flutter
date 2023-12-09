@@ -1,10 +1,12 @@
 // login.dart
+// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:ahmedfoued/service/auth_service.dart';
 import 'package:animate_do/animate_do.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -146,12 +148,12 @@ class _LoginPageState extends State<LoginPage> {
                   Row(
   mainAxisAlignment: MainAxisAlignment.center,
   children: <Widget>[
-    Text("Don't have an account?"),
+    const Text("Don't have an account?"),
     GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, '/signup');
       },
-      child: Text(
+      child: const Text(
         " Sign up",
         style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18, color: Colors.blue),
       ),
