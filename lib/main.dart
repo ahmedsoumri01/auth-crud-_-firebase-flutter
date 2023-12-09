@@ -1,7 +1,7 @@
 import 'package:ahmedfoued/dashboard_page.dart';
 import 'package:ahmedfoued/home_page.dart';
 import 'package:flutter/material.dart';
-import 'forgot_password_page.dart'; // Import the new page
+import 'auth/forgot_password_page.dart'; // Import the new page
 // ignore: depend_on_referenced_packages
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';

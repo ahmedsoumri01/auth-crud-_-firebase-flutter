@@ -6,7 +6,7 @@ import 'fire_crud/fire_crud_page.dart';
 class DashboardPage extends StatelessWidget {
   final AuthService authService = AuthService();
 
-  DashboardPage({super.key});
+  DashboardPage({Key? key});
 
   Future<void> _logout(BuildContext context) async {
     await authService.signOut();
@@ -15,9 +15,13 @@ class DashboardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String? userEmail = authService.getCurrentUserEmail();
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dashboard'),
+        title: const Text('Dashboard',
+        textAlign: TextAlign.center,
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
@@ -60,11 +64,17 @@ class DashboardPage extends StatelessWidget {
           ],
         ),
       ),
-      body: const Center(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Remove the ElevatedButtons from here
+             Text(
+             userEmail != null ? 'Welcome, $userEmail' : 'Dashboard',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 20),
+            // Add more widgets/content as needed
           ],
         ),
       ),
